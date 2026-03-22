@@ -1,6 +1,6 @@
 import PokemonCard from "@/components/PokemonCard";
 import { useEffect, useState } from "react";
-import { Alert, ScrollView, TextInput } from "react-native";
+import { Alert, ScrollView, StyleSheet, TextInput } from "react-native";
 
 interface Pokemon {
   name: string;
@@ -11,7 +11,8 @@ interface Data {
   results: Pokemon[];
 }
 export default function Index() {
-  const [results, setResults] = useState<Pokemon[]>([]);
+  const [allPokemons, setAllPokemons] = useState<Pokemon[]>([]);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     console.log("Entre en pantalla");
@@ -20,27 +21,37 @@ export default function Index() {
 
   const getPokemons = async () => {
     try {
-      const URL = "https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0";
+      const URL = "https://pokeapi.co/api/v2/pokemon?limit=150&offset=0";
       const response = await fetch(URL, {
         method: "GET",
       });
       const data: Data = await response.json();
-      setResults(data.results);
+      setAllPokemons(data.results);
     } catch (error) {
       Alert.alert("Ocurrió un error en móvil:" + error);
       window.alert("Ocurrió un error en la web:" + error);
     }
   };
 
-  const filterPokemon = (text: string) => {
-    const arrayFiltered = results.filter((item) => item.name.includes(text));
-    setResults(arrayFiltered);
+  const fitterPokemons = () => {
+    const text = search.trim().toLowerCase();
+
+    if (!text) return allPokemons;
+
+    return allPokemons.filter((item) => item.name.toLowerCase().includes(text));
   };
+
+  const filteredPokemons: Pokemon[] = fitterPokemons();
 
   return (
     <ScrollView>
-      <TextInput onChangeText={filterPokemon}></TextInput>
-      {results.map((item) => {
+      <TextInput
+        placeholder="Buscar Pokémon..."
+        placeholderTextColor="#888"
+        onChangeText={setSearch}
+        style={styles.searchInput}
+      />
+      {filteredPokemons.map((item) => {
         return (
           <PokemonCard
             key={item.name}
@@ -52,3 +63,23 @@ export default function Index() {
     </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  searchInput: {
+    height: 50,
+    backgroundColor: "#fff",
+    borderRadius: 14,
+    paddingHorizontal: 16,
+    fontSize: 16,
+    color: "#222",
+    marginHorizontal: 16,
+    marginVertical: 12,
+    borderWidth: 1,
+    borderColor: "#ddd",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+});
