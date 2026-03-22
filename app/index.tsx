@@ -11,14 +11,17 @@ interface Data {
   results: Pokemon[];
 }
 export default function Index() {
+  //Escribe y como funciona useState
   const [allPokemons, setAllPokemons] = useState<Pokemon[]>([]);
   const [search, setSearch] = useState("");
 
+  //Escribe y como funciona useEffect
   useEffect(() => {
     console.log("Entre en pantalla");
     getPokemons();
   }, []);
 
+  //Completa el código para realizar un request a una URL dada
   const getPokemons = async () => {
     try {
       const URL = "https://pokeapi.co/api/v2/pokemon?limit=150&offset=0";
@@ -33,11 +36,10 @@ export default function Index() {
     }
   };
 
+  //Para qué funciona filter
   const fitterPokemons = () => {
     const text = search.trim().toLowerCase();
-
     if (!text) return allPokemons;
-
     return allPokemons.filter((item) => item.name.toLowerCase().includes(text));
   };
 
@@ -51,6 +53,7 @@ export default function Index() {
         onChangeText={setSearch}
         style={styles.searchInput}
       />
+      {/* Como funciona .map() */}
       {filteredPokemons.map((item) => {
         return (
           <PokemonCard

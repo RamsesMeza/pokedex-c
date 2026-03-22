@@ -7,10 +7,13 @@ interface PokemonCardProps {
   url: string;
 }
 
+//Cual es el propósito de la interface en este código
 export default function PokemonCard(props: PokemonCardProps) {
+  //Como funciona split, filter y at
   const id = props.url.split("/").filter(Boolean).at(-1);
   const pokemonImageURL = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${id}.png`;
 
+  //Qué es el router y para que sirve
   return (
     <Pressable
       style={styles.card}
